@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>W-2 Extractor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Essential for responsiveness -->
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -19,12 +20,14 @@
             margin-top: 40px;
             font-size: 2rem;
             color: #333;
+            text-align: center;
+            padding: 0 1rem;
         }
 
         .card {
             background: white;
-            padding: 30px 40px;
-            margin: 30px 0;
+            padding: 30px 20px;
+            margin: 30px 1rem;
             border-radius: 12px;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
             width: 90%;
@@ -68,33 +71,78 @@
         h2 {
             margin-top: 30px;
             color: #1f2937;
+            text-align: center;
         }
 
         h3 {
             color: #dc2626;
+            text-align: center;
         }
-        .place{
+
+        .place {
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             flex-direction: column;
+            gap: 10px;
         }
-        .place label{
-            font-size: 1.6rem;
+
+        .place label {
+            font-size: 1.2rem;
             color: #374151;
-            position: relative;
-            left: 0px;
             font-weight: 600;
         }
-        .place button{
-            font-size: 1.1rem;
-            position: relative;
-            left: 25px;
+
+        .place input[type="file"] {
+            font-size: 0.9rem;
         }
-        .place input[type="file"]{
-            font-size: 0.8rem;
-            position: relative;
-            left: 25px;
+
+        .place button {
+            font-size: 1rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background-color: #f9f9f9;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+
+        thead {
+            background-color: #e0e0e0;
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                padding: 20px 15px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .place label {
+                font-size: 1rem;
+            }
+
+            .place button {
+                font-size: 0.9rem;
+            }
+
+            .place input[type="file"] {
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
@@ -104,36 +152,35 @@
     <div class="card">
         <div class="place">
             <form method="POST" enctype="multipart/form-data">
-            <label>Upload W-2 Image:</label><br>
-            <input type="file" name="image" accept="image/*" required><br>
-            <button type="submit">🚀 Extract Fields</button>
-        </form>
+                <label>Upload W-2 Image:</label>
+                <input type="file" name="image" accept="image/*" required>
+                <button type="submit">🚀 Extract Fields</button>
+            </form>
         </div>
-       
 
-      {% if parsed_json %}
-    <h2>✅ Output</h2>
-    <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; width: 80%; margin: auto; background-color: #f9f9f9;">
-        <thead style="background-color: #e0e0e0;">
-            <tr>
-                <th style="text-align: left;">Field</th>
-                <th style="text-align: left;">Value</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for key, value in parsed_json.items() %}
-            <tr>
-                <td>{{ key }}</td>
-                <td>{{ value }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-{% elif result_text %}
-    <h3>❌ Could not parse response as valid JSON.</h3>
-{% endif %}
-
-    
+        {% if parsed_json %}
+        <h2>✅ Output</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for key, value in parsed_json.items() %}
+                    <tr>
+                        <td>{{ key }}</td>
+                        <td>{{ value }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% elif result_text %}
+        <h3>❌ Could not parse response as valid JSON.</h3>
+        {% endif %}
     </div>
 </body>
 </html>
